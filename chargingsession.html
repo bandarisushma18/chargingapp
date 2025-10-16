@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Charging Session</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    /* Page background */
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(40deg, #1FA2FF, #12D8FA, #a72056);
+    }
+
+    /* Card background color */
+    .session-card {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+      width: 90%;
+      max-width: 420px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    /* Navbar inside card */
+    .card-navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 20px;
+      background-color: #3b82f6;
+      color: #fff;
+      font-size: 1.1rem;
+    }
+
+    .card-navbar .center-text {
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
+
+    /* Card content */
+    .card-content {
+      padding: 25px 20px;
+    }
+
+    .location {
+      color: #584c4c;
+      font-size: 1rem;
+      margin-bottom: 20px;
+    }
+
+    .timer {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #222;
+      margin-top: 5px;
+    }
+
+    .cost {
+      font-size: 1.3rem;
+      color: #2c5282;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+
+    .note {
+      font-size: 0.9rem;
+      color: #555;
+      margin-top: 15px;
+    }
+
+    .btn-end {
+      margin-top: 25px;
+      width: 100%;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(90deg, #06b6d4, #3b82f6);
+      color: #070707;
+      transition: 0.3s;
+    }
+
+    .btn-end:hover {
+      opacity: 0.9;
+    }
+
+    /* Responsive Media Queries */
+    @media (min-width: 576px) {
+      .card-content { padding: 30px 25px; }
+      .timer { font-size: 2.2rem; }
+    }
+
+    @media (min-width: 768px) {
+      .card-content { padding: 35px 30px; }
+      .timer { font-size: 2.5rem; }
+    }
+
+    @media (min-width: 1200px) {
+      .card-content { padding: 40px 35px; }
+      .timer { font-size: 3rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="session-card">
+    <!-- Navbar -->
+    <div class="card-navbar">
+      <div><a href="active reservation.html"><i class="fas fa-arrow-left"></i></a></div>
+      <div class="center-text">Charging You</div>
+      <div><i class="fas fa-bell"></i></div>
+    </div>
+
+    <!-- Card Content -->
+    <div class="card-content">
+      <div class="location">Cafe Aura</div>
+
+      <!-- Timer -->
+       <h4>Session Duration:</h4>
+      <div class="timer" id="timer">05:00</div>
+      <div class="cost" id="cost">Current Cost: ₹26.67</div>
+
+      <div class="note">
+        Ensure your device is securely connected.<br>
+        Do not unplug without ending session.
+      </div>
+
+      <button class="btn-end" id="endBtn">End Session</button>
+      <a href="postsession.html">
+      <button class="btn-end" id="endBtn">Next</button>
+      </a>
+    </div>
+  </div>
+
+  <script>
+    // 5-minute countdown timer
+    let totalSeconds = 5 * 60; // 5 minutes in seconds
+    const costPerSecond = 0.0854; 
+    let timerInterval;
+
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        if (totalSeconds < 0) {
+          clearInterval(timerInterval);
+          alert(Session ended.\nTotal Cost: ₹${(5*60*costPerSecond).toFixed(2)});
+          document.getElementById('timer').innerText = "00:00";
+          return;
+        }
+
+        const mins = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
+        const secs = String(totalSeconds % 60).padStart(2, '0');
+        document.getElementById('timer').innerText = ${mins}:${secs};
+
+        const elapsed = 5*60 - totalSeconds;
+        const cost = (elapsed * costPerSecond).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        document.getElementById('cost').innerText = Current Cost: ₹${cost};
+
+        totalSeconds--;
+      }, 1000);
+    }
+
+    document.getElementById('endBtn').addEventListener('click', () => {
+      clearInterval(timerInterval);
+      const totalCost = document.getElementById('cost').innerText.split('₹')[1];
+      alert(Session ended.\nTotal Cost: ₹${totalCost});
+      document.getElementById('endBtn').disabled = true;
+    });
+
+    window.onload = startTimer;
+  </script>
+
+</body>
+</html>
